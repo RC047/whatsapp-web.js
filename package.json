@@ -34,10 +34,10 @@
     "mime": "^3.0.0",
     "node-fetch": "^2.7.0",
     "node-webpmux": "3.2.1",
-    "puppeteer": "^24.16.2"
+    "puppeteer": "^24.10.2"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.12",
+    "@types/node-fetch": "^2.6.13",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "dotenv": "^16.0.0",
