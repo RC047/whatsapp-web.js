@@ -201,14 +201,9 @@ exports.LoadUtils = () => {
             } else {
                 caption = options.caption ? options.caption : ' '; //Caption can't be empty
             }
+            buttonOptions = window.WWebJS.prepareMessageButtons(options.buttons);
             buttonOptions = {
-                productHeaderImageRejected: false,
-                isFromTemplate: false,
-                isDynamicReplyButtonsMsg: true,
-                title: options.buttons.title ? options.buttons.title : undefined,
-                footer: options.buttons.footer ? options.buttons.footer : undefined,
-                dynamicReplyButtons: options.buttons.buttons,
-                replyButtons: options.buttons.buttons,
+                ...buttonOptions,
                 caption: caption
             };
             delete options.buttons;
@@ -216,9 +211,6 @@ exports.LoadUtils = () => {
 
         let listOptions = {};
         if (options.list) {
-            if (window.Store.Conn.platform === 'smba' || window.Store.Conn.platform === 'smbi') {
-                throw '[LT01] Whatsapp business can\'t send this yet';
-            }
             listOptions = {
                 type: 'list',
                 footer: options.list.footer,
@@ -863,7 +855,7 @@ exports.LoadUtils = () => {
 
         options = Object.assign({ size: 640, mimetype: media.mimetype, quality: .75, asDataUrl: false }, options);
 
-        const img = await new Promise ((resolve, reject) => {
+        const img = await new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => resolve(img);
             img.onerror = reject;
@@ -1166,4 +1158,72 @@ exports.LoadUtils = () => {
 
         return { lid, phone };
     };
+
+    window.WWebJS.prepareMessageButtons = (buttonsOptions) => {
+        const msg = {};
+        if (!buttonsOptions.buttons) {
+            return msg;
+        }
+
+        msg.title = buttonsOptions.title;
+
+        msg.footer = buttonsOptions.footer;
+
+        msg.isDynamicReplyButtonsMsg = true;
+
+        /**
+        if (false) {
+            msg.isFromTemplate = true;
+            msg.hydratedButtons = buttonsOptions.buttons;
+            msg.buttons = new window.Store.TemplateButtonCollection();
+            msg.buttons.add(
+                msg.hydratedButtons.map((button, index) => {
+                    const i = `${null != button.index ? button.index : index}`;
+                      
+                    if (button.urlButton) {
+                        return new window.Store.TemplateButtonModel({
+                            id: i,
+                            displayText: button.urlButton?.displayText,
+                            url: button.urlButton?.url,
+                            subtype: 'url',
+                        });
+                    }
+            
+                    if (button.callButton) {
+                        return new window.Store.TemplateButtonModel({
+                            id: i,
+                            displayText: button.callButton.displayText,
+                            phoneNumber: button.callButton.phoneNumber,
+                            subtype: 'call',
+                        });
+                    }
+            
+                    return new window.Store.TemplateButtonModel({
+                        id: i,
+                        displayText: button.quickReplyButton?.displayText,
+                        selectionId: button.quickReplyButton?.id,
+                        subtype: 'quick_reply',
+                    });
+                })
+            );
+        }
+        **/
+
+        msg.dynamicReplyButtons = buttonsOptions.buttons.map((button, index) => ({
+            buttonId: (button.quickReplyButton.id || index).toString(),
+            buttonText: {
+                displayText: button.quickReplyButton?.displayText
+            },
+            type: 1,
+        }));
+
+        // For UI only
+        msg.replyButtons = new window.Store.ButtonCollection();
+        msg.replyButtons.add(msg.dynamicReplyButtons.map((button) => new window.Store.ReplyButtonModel({
+            id: button.buttonId,
+            displayText: button.buttonText?.displayText || undefined,
+        })));
+
+        return msg;
+    }
 };
