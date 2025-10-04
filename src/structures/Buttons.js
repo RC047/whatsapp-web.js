@@ -66,7 +66,9 @@ class Buttons {
          * @type {FormattedButtonSpec[]}
          */
         this.buttons = this._format(buttons);
-        if(!this.buttons.length){ throw '[BT01] No buttons';}
+        if (!this.buttons.length) {
+            throw '[BT01] No buttons';
+        }
 
         /**
          * Override buttons with templates
@@ -88,8 +90,7 @@ class Buttons {
 
         return buttons.map((button, index) => {
             if (button.url && button.number && button.id) throw 'Only pick one of the following (url/number/id)';
-            if (button.number) {
-                console.log('[WARNING] THIS FEATURE (CALL BUTTONS) IS UNSTABLE AND IS NOT TESTED OR EXPECTED TO WORK ON ALL PLATFORMS. Help test this feature with us on https://github.com/wwebjs/buttons-test');
+            if (button.number) {;
                 return {
                     index,
                     callButton: {
@@ -98,7 +99,6 @@ class Buttons {
                     }
                 };
             } else if (button.url) {
-                console.log('[WARNING] THIS FEATURE (URL BUTTONS) IS UNSTABLE AND IS NOT TESTED OR EXPECTED TO WORK ON ALL PLATFORMS. Help test this feature with us on https://github.com/wwebjs/buttons-test');
                 return {
                     index,
                     urlButton: {
