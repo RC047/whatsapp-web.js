@@ -277,12 +277,14 @@ exports.ExposeStore = () => {
                 let found;
                 const mediaPart = [
                     'documentMessage',
+                    'documentWithCaptionMessage',
                     'imageMessage',
                     'locationMessage',
                     'videoMessage',
                 ];
                 for (const part of mediaPart) {
                     if (part in proto) {
+                        if (part === 'documentWithCaptionMessage') part = 'documentMessage';
                         found = part;
                         break;
                     }
@@ -381,9 +383,11 @@ exports.ExposeStore = () => {
                 'locationMessage',
                 'videoMessage',
             ];
+
             if (messagePart.some((part) => keys.includes(part))) {
                 return 'media';
             }
+
             return 'text';
         }
 
@@ -392,12 +396,15 @@ exports.ExposeStore = () => {
 
     window.injectToFunction({ module: 'WAWebBackendJobsCommon', function: 'mediaTypeFromProtobuf' }, (func, ...args) => {
         const [proto] = args;
+
         if (proto.locationMessage) {
             return null;
         }
+
         if (proto.templateMessage?.hydratedTemplate) {
             return func(proto.templateMessage.hydratedTemplate);
         }
+
         return func(...args);
     });
 
@@ -410,7 +417,7 @@ exports.ExposeStore = () => {
     });
 
     window.injectToFunction({ module: 'WAWebSendMsgCreateFanoutStanza', function: 'createFanoutMsgStanza' }, async (func, ...args) => {
-        const [, proto] = args;
+        const proto = args[1].id ? args[2] : args[1];
         let buttonNode = null;
 
         if (proto.buttonsMessage) {
@@ -420,12 +427,11 @@ exports.ExposeStore = () => {
             const types = ['unknown', 'single_select', 'product_list'];
             buttonNode = window.Store.SocketWap.wap('list', {
                 v: '2',
-                type: types[listType]
+                type: types[listType],
             });
         }
 
         const node = await func(...args);
-
         if (!buttonNode) {
             return node;
         }
@@ -439,7 +445,6 @@ exports.ExposeStore = () => {
         }
 
         let hasButtonNode = false;
-
         if (Array.isArray(bizNode.content)) {
             hasButtonNode = !!bizNode.content.find((c) => c.tag === buttonNode?.tag);
         } else {
@@ -451,5 +456,14 @@ exports.ExposeStore = () => {
         }
 
         return node;
+    });
+
+    window.injectToFunction({ module: 'WAWebABProps', function: 'getABPropConfigValue' }, (func, ...args) => {
+        const [key] = args;
+        switch (key) {
+            case 'web_unwrap_message_for_stanza_attributes':
+                return false;
+        }
+        return func(...args);
     });
 };
