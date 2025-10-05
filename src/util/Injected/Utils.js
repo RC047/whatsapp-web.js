@@ -1161,6 +1161,7 @@ exports.LoadUtils = () => {
 
     window.WWebJS.prepareMessageButtons = (buttonsOptions) => {
         const msg = {};
+
         if (!buttonsOptions.buttons) {
             return msg;
         }
@@ -1171,7 +1172,6 @@ exports.LoadUtils = () => {
 
         msg.isDynamicReplyButtonsMsg = true;
 
-        /**
         if (false) {
             msg.isFromTemplate = true;
             msg.hydratedButtons = buttonsOptions.buttons;
@@ -1207,7 +1207,6 @@ exports.LoadUtils = () => {
                 })
             );
         }
-        **/
 
         msg.dynamicReplyButtons = buttonsOptions.buttons.map((button, index) => ({
             buttonId: (button.quickReplyButton.id || index).toString(),
