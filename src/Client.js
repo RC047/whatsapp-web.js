@@ -2319,8 +2319,7 @@ class Client extends EventEmitter {
      * @param {boolean} [syncToAddressbook = false] If set to true, the contact will also be saved to the user's address book on their phone. False by default
      * @returns {Promise<void>}
      */
-    async saveOrEditAddressbookContact(phoneNumber, firstName, lastName, syncToAddressbook = false)
-    {
+    async saveOrEditAddressbookContact(phoneNumber, firstName, lastName, syncToAddressbook = false) {
         return await this.pupPage.evaluate(async (phoneNumber, firstName, lastName, syncToAddressbook) => {
             return await window.Store.AddressbookContactUtils.saveContactAction(
                 phoneNumber,
@@ -2339,8 +2338,7 @@ class Client extends EventEmitter {
      * @param {string} phoneNumber The contact's phone number in a format "17182222222", where "1" is a country code
      * @returns {Promise<void>}
      */
-    async deleteAddressbookContact(phoneNumber)
-    {
+    async deleteAddressbookContact(phoneNumber) {
         return await this.pupPage.evaluate(async (phoneNumber) => {
             return await window.Store.AddressbookContactUtils.deleteContactAction(phoneNumber);
         }, phoneNumber);
