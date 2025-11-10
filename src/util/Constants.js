@@ -7,7 +7,7 @@ exports.DefaultOptions = {
         headless: true,
         defaultViewport: null
     },
-    webVersion: '2.3000.1029536383',
+    webVersion: '2.3000.1029637433',
     webVersionCache: {
         type: 'local',
     },
@@ -55,8 +55,8 @@ exports.Events = {
     MESSAGE_REVOKED_ME: 'message_revoke_me',
     MESSAGE_ACK: 'message_ack',
     MESSAGE_EDIT: 'message_edit',
-    UNREAD_COUNT: 'unread_count',
     MESSAGE_REACTION: 'message_reaction',
+    UNREAD_COUNT: 'unread_count',
     MEDIA_UPLOADED: 'media_uploaded',
     CONTACT_CHANGED: 'contact_changed',
     GROUP_JOIN: 'group_join',
