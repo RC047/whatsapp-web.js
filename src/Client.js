@@ -1865,7 +1865,7 @@ class Client extends EventEmitter {
                 await window.Store.ChannelUtils.changeNewsletterOwnerAction(channel, newOwner);
 
                 if (options.shouldDismissSelfAsAdmin) {
-                    const meContact = window.Store.ContactCollection.getMeContact();
+                    const meContact = window.Store.Contact.getMeContact();
                     meContact && (await window.Store.ChannelUtils.demoteNewsletterAdminAction(channel, meContact));
                 }
             } catch (error) {
