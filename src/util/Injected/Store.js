@@ -66,10 +66,6 @@ exports.ExposeStore = () => {
     window.Store.BlobCache = window.require('WAWebMediaInMemoryBlobCache');
     window.Store.SendSeen = window.require('WAWebUpdateUnreadChatAction');
     window.Store.User = window.require('WAWebUserPrefsMeUser');
-    window.Store.ContactMethods = {
-        ...window.require('WAWebContactGetters'),
-        ...window.require('WAWebFrontendContactGetters')
-    };
     window.Store.UserConstructor = window.require('WAWebWid');
     window.Store.Validators = window.require('WALinkify');
     window.Store.WidFactory = window.require('WAWebWidFactory');
@@ -97,7 +93,6 @@ exports.ExposeStore = () => {
     window.Store.ReplyUtils = window.require('WAWebMsgReply');
     window.Store.BotSecret = window.require('WAWebBotMessageSecret');
     window.Store.BotProfiles = window.require('WAWebBotProfileCollection');
-    window.Store.ContactCollection = window.require('WAWebContactCollection').ContactCollection;
     window.Store.DeviceList = window.require('WAWebApiDeviceList');
     window.Store.HistorySync = window.require('WAWebSendNonMessageDataRequest');
     window.Store.AddonReactionTable = window.require('WAWebAddonReactionTableMode').reactionTableMode;
@@ -131,6 +126,10 @@ exports.ExposeStore = () => {
         ...window.require('WAWebGenerateEventCallLink'),
         ...window.require('WAWebSendEventEditMsgAction'),
         ...window.require('WAWebSendEventResponseMsgAction')
+    };
+    window.Store.ContactMethods = {
+        ...window.require('WAWebContactGetters'),
+        ...window.require('WAWebFrontendContactGetters')
     };
     window.Store.VCard = {
         ...window.require('WAWebFrontendVcardUtils'),

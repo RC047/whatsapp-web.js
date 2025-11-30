@@ -846,8 +846,11 @@ class Client extends EventEmitter {
      * Closes the client
      */
     async destroy() {
-        await this.pupBrowser.close();
-        await this.authStrategy.destroy();
+        const browser = this.pupBrowser;
+        const isConnected = browser?.isConnected?.();
+        if (isConnected) {
+            await browser.close();
+        }
     }
 
     /**
@@ -1865,7 +1868,7 @@ class Client extends EventEmitter {
                 await window.Store.ChannelUtils.changeNewsletterOwnerAction(channel, newOwner);
 
                 if (options.shouldDismissSelfAsAdmin) {
-                    const meContact = window.Store.ContactCollection.getMeContact();
+                    const meContact = window.Store.Contact.getMeContact();
                     meContact && (await window.Store.ChannelUtils.demoteNewsletterAdminAction(channel, meContact));
                 }
             } catch (error) {
