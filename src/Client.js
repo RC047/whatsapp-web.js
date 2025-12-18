@@ -873,8 +873,11 @@ class Client extends EventEmitter {
      * Closes the client
      */
     async destroy() {
-        await this.pupBrowser.close();
-        await this.authStrategy.destroy();
+        const browser = this.pupBrowser;
+        const isConnected = browser?.isConnected?.();
+        if (isConnected) {
+            await browser.close();
+        }
     }
 
     /**
@@ -1086,7 +1089,7 @@ class Client extends EventEmitter {
             return msg
                 ? window.WWebJS.getMessageModel(msg)
                 : undefined;
-        }, chatId, content, internalOptions, sendSeen);
+        }, chatId, content, internalOptions, sendSeen).catch(() => {});
 
         return sentMsg
             ? new Message(this, sentMsg)
@@ -1908,7 +1911,7 @@ class Client extends EventEmitter {
                 await window.Store.ChannelUtils.changeNewsletterOwnerAction(channel, newOwner);
 
                 if (options.shouldDismissSelfAsAdmin) {
-                    const meContact = window.Store.ContactCollection.getMeContact();
+                    const meContact = window.Store.Contact.getMeContact();
                     meContact && (await window.Store.ChannelUtils.demoteNewsletterAdminAction(channel, meContact));
                 }
             } catch (error) {
@@ -2405,8 +2408,7 @@ class Client extends EventEmitter {
      * @param {boolean} [syncToAddressbook = false] If set to true, the contact will also be saved to the user's address book on their phone. False by default
      * @returns {Promise<void>}
      */
-    async saveOrEditAddressbookContact(phoneNumber, firstName, lastName, syncToAddressbook = false)
-    {
+    async saveOrEditAddressbookContact(phoneNumber, firstName, lastName, syncToAddressbook = false) {
         return await this.pupPage.evaluate(async (phoneNumber, firstName, lastName, syncToAddressbook) => {
             return await window.Store.AddressbookContactUtils.saveContactAction(
                 phoneNumber,
@@ -2425,8 +2427,7 @@ class Client extends EventEmitter {
      * @param {string} phoneNumber The contact's phone number in a format "17182222222", where "1" is a country code
      * @returns {Promise<void>}
      */
-    async deleteAddressbookContact(phoneNumber)
-    {
+    async deleteAddressbookContact(phoneNumber) {
         return await this.pupPage.evaluate(async (phoneNumber) => {
             return await window.Store.AddressbookContactUtils.deleteContactAction(phoneNumber);
         }, phoneNumber);

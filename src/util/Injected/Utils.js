@@ -640,7 +640,7 @@ exports.LoadUtils = () => {
             model.isGroup = true;
             const chatWid = window.Store.WidFactory.createWid(chat.id._serialized);
             await window.Store.GroupMetadata.update(chatWid);
-            chat.groupMetadata.participants._models
+            chat.groupMetadata.participants.getModelsArray()
                 .filter(x => x.id?._serialized?.endsWith('@lid'))
                 .forEach(x => x.contact?.phoneNumber && (x.id = x.contact.phoneNumber));
             model.groupMetadata = chat.groupMetadata.serialize();
@@ -1051,7 +1051,7 @@ exports.LoadUtils = () => {
         await window.Store.GroupQueryAndUpdate({ id: groupId });
 
         if (!requesterIds?.length) {
-            membershipRequests = group.groupMetadata.membershipApprovalRequests._models.map(({ id }) => id);
+            membershipRequests = group.groupMetadata.membershipApprovalRequests.getModelsArray().map(({ id }) => id);
         } else {
             !Array.isArray(requesterIds) && (requesterIds = [requesterIds]);
             membershipRequests = requesterIds.map(r => window.Store.WidFactory.createWid(r));
