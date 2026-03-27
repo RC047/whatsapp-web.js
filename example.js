@@ -389,10 +389,7 @@ client.on('message', async (msg) => {
     } else if (msg.body === '!buttons') {
         let button = new Buttons(
             'Button body\n\nWant to test buttons some more? Check out https://github.com/wwebjs/buttons-test',
-            [
-                { body: 'Some text' },
-                { body: 'Try clicking me', id: 'test' },
-            ],
+            [{ body: 'Some·text' }, { body: 'Try clicking me', id: 'test' }],
             'title',
             'footer',
         );
