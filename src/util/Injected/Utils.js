@@ -2114,7 +2114,10 @@ exports.LoadUtils = () => {
     */
 
     window.WWebJS.injectToFunction(
-        { module: 'WADeprecatedSendIq', function: 'deprecatedSendStanzaAndReturnAck' },
+        {
+            module: 'WADeprecatedSendIq',
+            function: 'deprecatedSendStanzaAndReturnAck'
+        },
         async (module, func, ...args) => {
             const [stanza] = args;
             let buttonNode = null;
@@ -2141,7 +2144,9 @@ exports.LoadUtils = () => {
 
                 let hasButtonNode = false;
                 if (Array.isArray(bizNode.content)) {
-                    hasButtonNode = !!bizNode.content.find((c) => c.tag === buttonNode.tag);
+                    hasButtonNode = !!bizNode.content.find(
+                        (c) => c.tag === buttonNode.tag,
+                    );
                 } else {
                     bizNode.content = [];
                 }
@@ -2155,12 +2160,12 @@ exports.LoadUtils = () => {
             console.log({
                 deprecatedSendStanzaAndReturnAck: {
                     args,
-                    result: node
-                }
+                    result: node,
+                },
             });
 
             return node;
-        }
+        },
     );
 
     window.WWebJS.injectToFunction(
