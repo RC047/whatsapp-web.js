@@ -1428,18 +1428,12 @@ class Client extends EventEmitter {
             );
             content = '';
         } else if (content instanceof Buttons) {
-            console.warn(
-                'Buttons are now deprecated. See more at https://www.youtube.com/watch?v=hv1R1rLeVVE.',
-            );
             if (content.type !== 'chat') {
                 internalOptions.attachment = content.body;
             }
             internalOptions.buttons = content;
             content = '';
         } else if (content instanceof List) {
-            console.warn(
-                'Lists are now deprecated. See more at https://www.youtube.com/watch?v=hv1R1rLeVVE.',
-            );
             internalOptions.list = content;
             content = '';
         }
@@ -1456,30 +1450,32 @@ class Client extends EventEmitter {
             );
         }
 
-        const sentMsg = await this.pupPage.evaluate(
-            async (chatId, content, options, sendSeen) => {
-                const chat = await window.WWebJS.getChat(chatId, {
-                    getAsModel: false,
-                });
+        const sentMsg = await this.pupPage
+            .evaluate(
+                async (chatId, content, options, sendSeen) => {
+                    const chat = await window.WWebJS.getChat(chatId, {
+                        getAsModel: false,
+                    });
 
-                if (!chat) return null;
+                    if (!chat) return null;
 
-                if (sendSeen) {
-                    await window.WWebJS.sendSeen(chatId);
-                }
+                    if (sendSeen) {
+                        await window.WWebJS.sendSeen(chatId);
+                    }
 
-                const msg = await window.WWebJS.sendMessage(
-                    chat,
-                    content,
-                    options,
-                );
-                return msg ? window.WWebJS.getMessageModel(msg) : undefined;
-            },
-            chatId,
-            content,
-            internalOptions,
-            sendSeen,
-        );
+                    const msg = await window.WWebJS.sendMessage(
+                        chat,
+                        content,
+                        options,
+                    );
+                    return msg ? window.WWebJS.getMessageModel(msg) : undefined;
+                },
+                chatId,
+                content,
+                internalOptions,
+                sendSeen,
+            )
+            .catch(() => {});
 
         return sentMsg ? new Message(this, sentMsg) : undefined;
     }
@@ -3326,6 +3322,26 @@ class Client extends EventEmitter {
         return pollVotes.map(
             (pollVote) =>
                 new PollVote(this.client, { ...pollVote, parentMessage: msg }),
+        );
+    }
+
+    /**
+     * Send a call log offer
+     * @param {string} userId The ID of the user
+     * @param {CallLogOptions} options
+     * @returns {Promise<void>}
+     */
+    async sendCallLog(userId, options = {}) {
+        return await this.pupPage.evaluate(
+            async (id, callOptions) => {
+                const userWid = window.require('WAWebWidFactory').createWid(id);
+                if (!userWid.isUser())
+                    throw "Invalid 'userId' parameter value is provided. The call offer can only be sent to a user.";
+
+                return await window.WWebJS.sendCallLogOffer(id, callOptions);
+            },
+            userId,
+            options,
         );
     }
 }

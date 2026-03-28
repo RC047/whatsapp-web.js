@@ -388,8 +388,8 @@ client.on('message', async (msg) => {
         }
     } else if (msg.body === '!buttons') {
         let button = new Buttons(
-            'Button body',
-            [{ body: 'bt1' }, { body: 'bt2' }, { body: 'bt3' }],
+            'Button body\n\nWant to test buttons some more? Check out https://github.com/wwebjs/buttons-test',
+            [{ body: 'Some·text' }, { body: 'Try clicking me', id: 'test' }],
             'title',
             'footer',
         );
@@ -397,10 +397,10 @@ client.on('message', async (msg) => {
     } else if (msg.body === '!list') {
         let sections = [
             {
-                title: 'sectionTitle',
+                title: 'Section title',
                 rows: [
-                    { title: 'ListItem1', description: 'desc' },
-                    { title: 'ListItem2' },
+                    { title: 'List item 1', description: 'desc' },
+                    { title: 'List item 2' },
                 ],
             },
         ];
@@ -408,8 +408,8 @@ client.on('message', async (msg) => {
             'List body',
             'btnText',
             sections,
-            'Title',
-            'footer',
+            'Custom title',
+            'Custom footer, google.com',
         );
         client.sendMessage(msg.from, list);
     } else if (msg.body === '!reaction') {
