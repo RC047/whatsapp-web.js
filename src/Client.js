@@ -1450,31 +1450,32 @@ class Client extends EventEmitter {
             );
         }
 
-        const sentMsg = await this.pupPage.evaluate(
-            async (chatId, content, options, sendSeen) => {
-                const chat = await window.WWebJS.getChat(chatId, {
-                    getAsModel: false,
-                });
+        const sentMsg = await this.pupPage
+            .evaluate(
+                async (chatId, content, options, sendSeen) => {
+                    const chat = await window.WWebJS.getChat(chatId, {
+                        getAsModel: false,
+                    });
 
-                if (!chat) return null;
+                    if (!chat) return null;
 
-                if (sendSeen) {
-                    await window.WWebJS.sendSeen(chatId);
-                }
+                    if (sendSeen) {
+                        await window.WWebJS.sendSeen(chatId);
+                    }
 
                 const msg = await window.WWebJS.sendMessage(
-                    chat,
-                    content,
-                    options,
-                );
-                return msg ? window.WWebJS.getMessageModel(msg) : undefined;
-            },
-            chatId,
-            content,
-            internalOptions,
-            sendSeen,
-        )
-        .catch(() => {});
+                        chat,
+                        content,
+                        options,
+                    );
+                    return msg ? window.WWebJS.getMessageModel(msg) : undefined;
+                },
+                chatId,
+                content,
+                internalOptions,
+                sendSeen,
+            )
+            .catch(() => {});
 
         return sentMsg ? new Message(this, sentMsg) : undefined;
     }
