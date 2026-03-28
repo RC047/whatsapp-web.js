@@ -1463,7 +1463,7 @@ class Client extends EventEmitter {
                         await window.WWebJS.sendSeen(chatId);
                     }
 
-                const msg = await window.WWebJS.sendMessage(
+                    const msg = await window.WWebJS.sendMessage(
                         chat,
                         content,
                         options,
