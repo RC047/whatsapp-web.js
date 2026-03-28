@@ -2116,7 +2116,7 @@ exports.LoadUtils = () => {
     window.WWebJS.injectToFunction(
         {
             module: 'WADeprecatedSendIq',
-            function: 'deprecatedSendStanzaAndReturnAck'
+            function: 'deprecatedSendStanzaAndReturnAck',
         },
         async (module, func, ...args) => {
             const [stanza] = args;
